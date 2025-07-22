@@ -2,7 +2,7 @@ import streamlit as st
 import joblib 
 import pandas as pd
 # laod the model 
-model = joblib.load(r'D:\python\rf_model_retrained.pt')
+model = joblib.load(r"model_heart.pt")
 # function to encode and predcit data 
 def predict(data): 
     data=data.dropna()
@@ -17,7 +17,7 @@ def predict(data):
 
 # title of applciation 
 st.title("Heard Disese Prediction")
-file=st.file_uploader(r"heart.csv", type='csv')
+file=st.file_uploader("Upload Your file", type='csv')
 try:
     if file is not None:
         data=pd.read_csv(file)
