@@ -1,7 +1,4 @@
 import streamlit as st
-from PIL import Image
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 import joblib
 
@@ -9,8 +6,7 @@ import joblib
 st.title("💡 Machine Learning Project - Heart Disease Classification")
 
 # Load model
-model_path = 'model_heart.pt'  # now in same folder as script
-  # raw string to avoid \p escape error
+model_path = 'model_heart.pt'  # Make sure this is the same file you trained and saved using joblib
 model = None
 
 try:
@@ -30,12 +26,19 @@ file = st.file_uploader("Upload your CSV file (must have required features)", ty
 if file is not None:
     if model is not None:
         try:
-            # Read file
+            # Read uploaded CSV
             data = pd.read_csv(file)
+
+            # Drop 'HeartDisease' column if it exists
+            if 'HeartDisease' in data.columns:
+                st.warning("⚠️ 'HeartDisease' column detected in uploaded file. It will be removed before prediction.")
+                data = data.drop(columns=['HeartDisease'])
+
+            # Show preview
             st.subheader("🔍 Uploaded Data Preview")
             st.write(data.head())
 
-            # Prediction
+            # Make predictions
             st.subheader("✅ Prediction Results")
             prediction = model.predict(data)
             data['Predicted'] = prediction
@@ -46,4 +49,5 @@ if file is not None:
     else:
         st.warning("⚠️ Model could not be loaded. Please check the path or format.")
 else:
-    st.info("👆 Please upload a CSV file with the correct format to see predictions.")
+    st.info("👆 Please upload a CSV file with the correct format (features only).")
+
